@@ -1,4 +1,4 @@
-# rabbitmq-pubsub-example
+# rabbitmq-competing-consumers-example
 
 ## How to start
 1. Run broker
