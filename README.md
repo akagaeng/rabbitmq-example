@@ -1,4 +1,4 @@
-# rabbitmq-competing-consumers-example
+# rabbitmq-example
 
 ## How to start
 1. Run broker
