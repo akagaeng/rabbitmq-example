@@ -1,30 +1,37 @@
-// var amqp = require('amqplib');
-var amqp = require('amqplib/callback_api');
+const amqp = require('amqplib');
 
-amqp.connect('amqp://rabbit:rabbit@localhost', function (error0, connection) {
-    if (error0) {
-        throw error0;
-    }
+const QUEUE_NAME = 'queue';
 
-    connection.createChannel(function (error1, channel) {
-        if (error1) {
-            throw error1;
-        }
+const count = Number(process.argv[2]);
+const hostname = 'rabbit:rabbit@localhost';
 
-        var queue = 'hello';
-        var msg = `Message!`;
-
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        channel.sendToQueue(queue, Buffer.from(msg));
-
-        console.log(" [x] Sent %s", msg);
-    });
-
+function sendMessage(channel, queue, msg) {
+    channel.sendToQueue(queue, Buffer.from(msg));
     setTimeout(function () {
-        connection.close();
+        channel.close();
         process.exit(0);
     }, 500);
-});
+}
+
+if (isNaN(count) || count < 1) {
+    console.log('[Error] Input message count in argv[2].');
+    process.exit(0);
+}
+
+const open = amqp.connect(`amqp://${hostname}`);
+
+// Publisher
+open.then(connection => connection.createChannel())
+    .then(channel => channel.assertQueue(QUEUE_NAME)
+        .then(ok => {
+                if (ok) {
+                    for (let i = 1; i <= count; i++) {
+                        sendMessage(channel, QUEUE_NAME, `MSG[${i}]`);
+                    }
+                }
+
+                console.log(`${count} messages sent`);
+            }
+        ))
+    .catch(console.warn);
 
