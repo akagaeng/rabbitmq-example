@@ -12,17 +12,25 @@ Producer -> Message Queue (Broker) -> Consumer(s)
 - Consumer stops consuming when working with a task
 - Once task finished, Consumer should resume consuming
 
+
 ## How to start
-1. Run broker
+
+1. Install packages
+
+```bash
+yarn    # npm install
+```
+
+2. Run broker
 
 ```bash
 docker-compose up -d
 ```
 
-2. Run browser to open RabbitMQ Management
+3. Run browser to open RabbitMQ Management
 - http://localhost:8080
 
-3. `Consumer`: Receive messages from `Queue`
+4. `Consumer`: Receive messages from `Queue`
 
 - Open multiple terminals
 
@@ -30,7 +38,7 @@ docker-compose up -d
 node receive.js
 ```
 
-4. `Producer`: Send messages to `Queue` 
+5. `Producer`: Send messages to `Queue` 
 
 ```bash
 node send.js 10  # number of messages to send
