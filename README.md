@@ -20,7 +20,7 @@ docker-compose up -d
 ```
 
 2. Run browser to open RabbitMQ Management
-- `http://localhost:8080`
+- http://localhost:8080
 
 3. `Consumer`: Receive messages from `Queue`
 
