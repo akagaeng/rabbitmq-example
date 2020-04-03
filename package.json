@@ -19,5 +19,11 @@
   "homepage": "https://github.com/akagaeng/rabbitmq-pubsub-example#readme",
   "dependencies": {
     "amqplib": "^0.5.5"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "prettier-eslint": "^9.0.1"
   }
 }
