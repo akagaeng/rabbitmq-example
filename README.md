@@ -12,6 +12,9 @@ Producer -> Message Queue (Broker) -> Consumer(s)
 - Consumer stops consuming when working with a task
 - Once task finished, Consumer should resume consuming
 
+## Prerequisites
+- [node.js](https://nodejs.org)
+- [docker-compose](https://docs.docker.com/compose/install)
 
 ## How to start
 
