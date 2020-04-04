@@ -1,16 +1,10 @@
 const amqp = require("amqplib");
 
-const QUEUE_NAME = "queue";
+const queue = "queue";
+const exchange = "exchange";
+
 const count = Number(process.argv[2]);
 const hostname = "rabbit:rabbit@localhost";
-
-function sendMessage(channel, queue, msg) {
-  channel.sendToQueue(queue, Buffer.from(msg));
-  setTimeout(() => {
-    channel.close();
-    process.exit(0);
-  }, 500);
-}
 
 if (Number.isNaN(count) || count < 1) {
   console.log("[Error] Input message count in argv[2].");
@@ -22,15 +16,25 @@ const open = amqp.connect(`amqp://${hostname}`);
 // Publisher
 open
   .then(connection => connection.createChannel())
-  .then(channel =>
-    channel.assertQueue(QUEUE_NAME).then(ok => {
+  .then(channel => {
+    // Using exchange for delayed message
+    channel.assertQueue(queue).then(ok => {
       if (ok) {
-        for (let i = 1; i <= count; i++) {
-          sendMessage(channel, QUEUE_NAME, `MSG[${i}]`);
-        }
+        channel
+          .assertExchange(exchange, 'x-delayed-message', { arguments: { 'x-delayed-type': 'direct' } }).then(() => {
+            // Creates a bind between queue and exchange
+            channel.bindQueue(queue, exchange).then(() => {
+              // Send messages with delay
+              channel.publish(exchange, '', Buffer.from('0. my direct message'), { persistent: true, headers: { } });
+              channel.publish(exchange, '', Buffer.from('3. my delayed message'), { persistent: true, headers: { 'x-delay': 10000 } });
+              channel.publish(exchange, '', Buffer.from('1. my delayed message'), { persistent: true, headers: { 'x-delay': 3000 } });
+              channel.publish(exchange, '', Buffer.from('4. my delayed message'), { persistent: true, headers: { 'x-delay': 12000 } });
+              channel.publish(exchange, '', Buffer.from('2. my delayed message'), { persistent: true, headers: { 'x-delay': 5000 } });
+            });
+          });
       }
 
       console.log(`${count} messages sent`);
-    })
-  )
+    });
+  })
   .catch(console.warn);

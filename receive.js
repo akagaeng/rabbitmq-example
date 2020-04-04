@@ -1,7 +1,7 @@
 const amqp = require("amqplib");
 
-const QUEUE_NAME = "queue";
-const WORKING_SECONDS_MAX = 5; // seconds
+const queue = "queue";
+const maxSeconds = 5; // seconds
 
 const hostname = "rabbit:rabbit@localhost";
 
@@ -58,7 +58,7 @@ async function waitForMessage(queue, channel) {
       await stopReceiveMessage(consumerTag, channel);
 
       // Time intensive work (seconds)
-      await timeIntensiveWork(WORKING_SECONDS_MAX);
+      await timeIntensiveWork(maxSeconds);
 
       // Go back to wait for message
       return waitForMessage(queue, channel);
@@ -73,14 +73,14 @@ open
     connection
       .createChannel()
       .then(async channel => {
-        await channel.assertQueue(QUEUE_NAME, { durable: true });
+        await channel.assertQueue(queue, { durable: true });
         console.log(
           " [*] Waiting for messages in %s. To exit press CTRL+C",
-          QUEUE_NAME
+          queue
         );
         return channel;
       })
-      .then(async channel => await waitForMessage(QUEUE_NAME, channel))
+      .then(async channel => await waitForMessage(queue, channel))
       .catch(console.error)
   )
   .catch(console.error);
