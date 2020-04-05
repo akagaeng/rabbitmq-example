@@ -7,10 +7,12 @@ Producer -> Message Queue (Broker) -> Consumer(s)
 ```
 
 ## Description
-- Consumer consumes messages 
-- Time-consuming task is encapsulated as a message
-- Consumer stops consuming when working with a task
-- Once task finished, Consumer should resume consuming
+- [x] Consumer consumes messages 
+- [x] Time-consuming task is encapsulated as a message
+- [x] Consumer stops consuming when working with a task
+- [x] Once task finished, Consumer should resume consuming
+- [x] Scheduled messaging
+- [ ] JSON type message 
 
 ## Prerequisites
 - [node.js](https://nodejs.org)
@@ -41,7 +43,7 @@ docker-compose up -d
 node receive.js
 ```
 
-5. `Producer`: Send messages to `Queue` 
+5. `Producer`: Send messages to `Queue` (`Exchange` -> `Queue`) 
 
 ```bash
 node send.js 10  # number of messages to send
