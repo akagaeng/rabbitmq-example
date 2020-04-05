@@ -5,8 +5,7 @@ services:
         ports:
             - '5672:5672'
             - '8080:15672'
-#        image: 'rabbitmq:3.8-management'
-        build: .
+        image: 'akagaeng/rabbitmq-delayed-message-exchange'
         environment:
             - RABBITMQ_DEFAULT_USER=rabbit
             - RABBITMQ_DEFAULT_PASS=rabbit
